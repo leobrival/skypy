@@ -1,8 +1,10 @@
 # Skypy - Cartes de Visite Connectées
 
-## Vision du Projet
+## 🎯 Notre Vision
 
-Skypy est une plateforme moderne de cartes de visite numériques qui réinvente la façon dont nous partageons nos informations professionnelles. Inspirée par la simplicité de Linktree et l'expérience utilisateur fluide de Bento.me, notre solution offre une approche innovante pour créer et partager des profils professionnels digitaux.
+> _"Réinventer la façon dont nous partageons notre identité professionnelle dans un monde connecté."_
+
+Skypy est une plateforme moderne de cartes de visite numériques qui transforme la façon dont nous partageons nos informations professionnelles. Inspirée par la simplicité de Linktree et l'expérience utilisateur fluide de Bento.me, notre solution offre une approche innovante pour créer et partager des profils professionnels digitaux.
 
 ## Caractéristiques Principales
 

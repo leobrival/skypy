@@ -36,7 +36,15 @@
 - [ ] Gestion des médias
 - [ ] Prévisualisation en temps réel
 
-### 2.3 Système de Liens
+### 2.3 Design System
+- [x] Configuration des couleurs Tailwind
+- [x] Système de sélection de texte dynamique
+- [x] Validation des types avec Zod
+- [x] Hooks personnalisés pour les interactions
+- [ ] Animations et transitions
+- [ ] Thème sombre/clair
+
+### 2.4 Système de Liens
 - [ ] Création de liens personnalisés
 - [ ] Système de catégories
 - [ ] Analytics par lien
@@ -70,11 +78,21 @@
 - [ ] Rapports personnalisés
 - [ ] Export des données
 
-### 4.2 Performance
-- [ ] Optimisation des images
-- [ ] Mise en cache
-- [ ] Optimisation SEO
-- [ ] Tests de performance
+### 4.2 Performance & Type Safety
+- [x] Validation runtime avec Zod
+- [x] Types TypeScript stricts
+- [x] Documentation JSDoc
+- [ ] Tests unitaires
+- [ ] Tests E2E
+- [ ] Audit de performance
+- [ ] Optimisation des imports
+
+### 4.3 UX Improvements
+- [x] Sélection de texte interactive
+- [ ] Animations fluides
+- [ ] Retours utilisateur
+- [ ] Accessibilité
+- [ ] Support international
 
 ## Phase 5: Tests & Déploiement (Semaine 13-14)
 
