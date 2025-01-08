@@ -3,6 +3,12 @@
 ## Phase 1: Configuration Initiale (Semaine 1-2)
 
 ### 1.1 Mise en place de l'environnement
+- [x] Initialisation du repo Git
+- [x] Configuration de la branche main
+- [x] Configuration Vercel
+  - [x] Connexion avec GitHub
+  - [x] Configuration du déploiement automatique
+  - [x] Configuration des variables d'environnement
 - [ ] Initialisation du projet Next.js
 - [ ] Configuration TypeScript
 - [ ] Mise en place ESLint et Prettier
@@ -79,10 +85,20 @@
 - [ ] Tests de sécurité
 
 ### 5.2 Déploiement
-- [ ] Configuration des environnements de production
-- [ ] Mise en place monitoring
+- [ ] Vérification des variables d'environnement Vercel
+- [ ] Tests de déploiement preview
+- [ ] Configuration des domaines personnalisés
+- [ ] Mise en place des redirections
+- [ ] Configuration SSL/TLS
+- [ ] Monitoring des déploiements
 - [ ] Documentation technique
 - [ ] Plan de backup et disaster recovery
+
+### 5.3 CI/CD
+- [ ] Tests automatisés sur les Pull Requests
+- [ ] Vérification du build sur Vercel
+- [ ] Déploiements automatiques sur main
+- [ ] Notifications Slack/Discord des déploiements
 
 ## Backlog Technique
 

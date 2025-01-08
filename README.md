@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Skypy - Digital Business Card Platform
 
-## Getting Started
+## 🚀 Quick Start
 
-First, run the development server:
+### Prerequisites
 
+- Docker & Docker Compose
+- Node.js 18+
+- pnpm
+
+### Environment Setup
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone git@github.com:leobrival/skypy.git
+cd skypy
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Copy environment files:
+```bash
+cp .env.example .env
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Install dependencies:
+```bash
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Launch Supabase Services
 
-## Learn More
+Start all Supabase services using Docker Compose:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+docker-compose up -d
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This will start:
+- PostgreSQL database (port 5432)
+- Supabase Studio (port 3000)
+- Authentication service
+- REST API
+- Realtime subscriptions
+- Storage API
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Development Server
 
-## Deploy on Vercel
+Start the Next.js development server:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Visit [http://localhost:3000](http://localhost:3000) to see your application.
+
+## 🔧 Environment Variables
+
+The project uses strong environment variable validation with Zod. Key variables include:
+
+### Required Variables
+- `DATABASE_URL`: PostgreSQL connection string
+- `POSTGRES_PASSWORD`: Database password
+- `JWT_SECRET`: 32+ character secret for JWT
+- `ANON_KEY`: Supabase anonymous key
+- `SERVICE_ROLE_KEY`: Supabase service role key
+
+### Optional Variables
+- Email configuration (SMTP)
+- Redis configuration
+- Storage backend configuration
+
+See `.env.example` for all available options.
+
+## 🛠 Development Tools
+
+- **TypeScript**: Strict mode enabled
+- **Zod**: Runtime type validation
+- **ESLint & Prettier**: Code formatting
+- **Docker**: Development services
+- **Supabase**: Backend services
+
+## 📚 Documentation
+
+- [Project Overview](./DEEVBOOK.md)
+- [Development Worksheet](./WORKSHEET.md)
+
+## 🧪 Testing
+
+```bash
+# Run unit tests
+pnpm test
+
+# Run e2e tests
+pnpm test:e2e
+```
+
+## 📦 Production Deployment
+
+1. Build the application:
+```bash
+pnpm build
+```
+
+2. Start production server:
+```bash
+pnpm start
+```
+
+## 🤝 Contributing
+
+Please read our [Contributing Guide](./CONTRIBUTING.md) before submitting a Pull Request.
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
