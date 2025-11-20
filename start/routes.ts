@@ -13,6 +13,7 @@ import { middleware } from './kernel.js'
 const AuthController = () => import('#controllers/auth_controller')
 const DashboardController = () => import('#controllers/dashboard_controller')
 const PagesController = () => import('#controllers/pages_controller')
+const PublicPagesController = () => import('#controllers/public_pages_controller')
 
 // Home
 router.on('/').renderInertia('home')
@@ -50,4 +51,7 @@ router
     router.post('/pages/:id/links/reorder', [PagesController, 'reorderLinks']).as('pages.links.reorder')
   })
   .use(middleware.auth())
+
+// Public pages (must be last to avoid conflicts)
+router.get('/:slug', [PublicPagesController, 'show']).as('public.page')
 
