@@ -1,10 +1,9 @@
 import { Head, Link } from '@inertiajs/react'
 import { useState } from 'react'
 import {
-  Area,
-  AreaChart,
   Bar,
   BarChart,
+  CartesianGrid,
   Cell,
   Pie,
   PieChart,
@@ -187,44 +186,58 @@ export default function AnalyticsIndex({
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
-            {/* Clicks Over Time */}
+            {/* Clicks Over Time - Bar Chart like Vercel */}
             {analytics.clicksPerDay.length > 0 && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Clicks Over Time</CardTitle>
-                  <CardDescription>
-                    Daily click activity for the last {period}
-                  </CardDescription>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <CardTitle className="text-lg font-semibold">
+                        Visitor Analytics
+                      </CardTitle>
+                      <CardDescription className="text-sm mt-1">
+                        Showing total visitors for the last {period}
+                      </CardDescription>
+                    </div>
+                    <div className="flex gap-8">
+                      <div className="text-right">
+                        <div className="text-xs text-muted-foreground mb-1">
+                          Desktop
+                        </div>
+                        <div className="text-3xl font-bold">
+                          {analytics.deviceStats.find(
+                            (d) => d.type === 'desktop',
+                          )?.count || 0}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xs text-muted-foreground mb-1">
+                          Mobile
+                        </div>
+                        <div className="text-3xl font-bold">
+                          {analytics.deviceStats.find(
+                            (d) => d.type === 'mobile',
+                          )?.count || 0}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <ChartContainer
                     config={clicksChartConfig}
                     className="h-[300px]"
                   >
-                    <AreaChart
+                    <BarChart
                       data={analytics.clicksPerDay}
                       margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                     >
-                      <defs>
-                        <linearGradient
-                          id="fillClicks"
-                          x1="0"
-                          y1="0"
-                          x2="0"
-                          y2="1"
-                        >
-                          <stop
-                            offset="5%"
-                            stopColor="hsl(var(--chart-1))"
-                            stopOpacity={0.8}
-                          />
-                          <stop
-                            offset="95%"
-                            stopColor="hsl(var(--chart-1))"
-                            stopOpacity={0.1}
-                          />
-                        </linearGradient>
-                      </defs>
+                      <CartesianGrid
+                        strokeDasharray="0"
+                        vertical={false}
+                        stroke="hsl(var(--border))"
+                        strokeOpacity={0.3}
+                      />
                       <XAxis
                         dataKey="date"
                         tickLine={false}
@@ -232,20 +245,31 @@ export default function AnalyticsIndex({
                         tickMargin={8}
                         tickFormatter={(value) => {
                           const date = new Date(value)
-                          return `${date.getMonth() + 1}/${date.getDate()}`
+                          const monthNames = [
+                            'Jan',
+                            'Feb',
+                            'Mar',
+                            'Apr',
+                            'May',
+                            'Jun',
+                            'Jul',
+                            'Aug',
+                            'Sep',
+                            'Oct',
+                            'Nov',
+                            'Dec',
+                          ]
+                          return `${monthNames[date.getMonth()]} ${date.getDate()}`
                         }}
                       />
                       <YAxis tickLine={false} axisLine={false} tickMargin={8} />
                       <ChartTooltip content={<ChartTooltipContent />} />
-                      <Area
+                      <Bar
                         dataKey="clicks"
-                        type="monotone"
-                        fill="url(#fillClicks)"
-                        fillOpacity={1}
-                        stroke="hsl(var(--chart-1))"
-                        strokeWidth={2}
+                        fill="hsl(var(--chart-1))"
+                        radius={[2, 2, 0, 0]}
                       />
-                    </AreaChart>
+                    </BarChart>
                   </ChartContainer>
                 </CardContent>
               </Card>
