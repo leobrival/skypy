@@ -7,7 +7,7 @@ export const createLinkValidator = vine.compile(
     destinationUrl: vine.string().url().maxLength(2048),
     landingPageId: vine.string().uuid().optional(),
     expirationDate: vine.date().optional(),
-  })
+  }),
 )
 
 export const updateLinkValidator = vine.compile(
@@ -17,7 +17,7 @@ export const updateLinkValidator = vine.compile(
     destinationUrl: vine.string().url().maxLength(2048).optional(),
     position: vine.number().optional(),
     isActive: vine.boolean().optional(),
-  })
+  }),
 )
 
 export const reorderLinksValidator = vine.compile(
@@ -26,7 +26,7 @@ export const reorderLinksValidator = vine.compile(
       vine.object({
         id: vine.string().uuid(),
         position: vine.number(),
-      })
+      }),
     ),
-  })
+  }),
 )

@@ -1,10 +1,16 @@
 import { Head, useForm } from '@inertiajs/react'
-import AppLayout from '../../layouts/app_layout'
+import type { FormEventHandler } from 'react'
 import { Button } from '../../components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../../components/ui/card'
 import { Input } from '../../components/ui/input'
 import { Label } from '../../components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
-import { FormEventHandler } from 'react'
+import AppLayout from '../../layouts/app_layout'
 
 export default function CreatePage() {
   const { data, setData, post, processing, errors } = useForm({
@@ -72,7 +78,9 @@ export default function CreatePage() {
                   required
                 />
                 {errors.profileName && (
-                  <p className="text-sm text-destructive">{errors.profileName}</p>
+                  <p className="text-sm text-destructive">
+                    {errors.profileName}
+                  </p>
                 )}
               </div>
 

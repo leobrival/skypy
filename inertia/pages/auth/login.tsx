@@ -1,10 +1,17 @@
 import { Head, Link, useForm } from '@inertiajs/react'
-import AuthLayout from '../../layouts/auth_layout'
+import type { FormEventHandler } from 'react'
 import { Button } from '../../components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '../../components/ui/card'
 import { Input } from '../../components/ui/input'
 import { Label } from '../../components/ui/label'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../../components/ui/card'
-import { FormEventHandler } from 'react'
+import AuthLayout from '../../layouts/auth_layout'
 
 export default function Login() {
   const { data, setData, post, processing, errors } = useForm({
@@ -89,7 +96,10 @@ export default function Login() {
             </Button>
             <p className="text-sm text-center text-muted-foreground">
               Don't have an account?{' '}
-              <Link href="/auth/register" className="text-primary hover:underline">
+              <Link
+                href="/auth/register"
+                className="text-primary hover:underline"
+              >
                 Sign up
               </Link>
             </p>

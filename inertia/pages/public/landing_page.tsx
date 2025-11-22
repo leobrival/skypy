@@ -39,7 +39,10 @@ export default function LandingPage({ page }: { page: Page }) {
   return (
     <PublicLayout>
       <Head title={page.profileName}>
-        <meta name="description" content={page.bio || `Visit ${page.profileName}'s page`} />
+        <meta
+          name="description"
+          content={page.bio || `Visit ${page.profileName}'s page`}
+        />
       </Head>
 
       <div

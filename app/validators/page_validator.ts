@@ -13,7 +13,7 @@ export const createPageValidator = vine.compile(
       }),
     profileName: vine.string().minLength(1).maxLength(200),
     bio: vine.string().maxLength(500).optional(),
-  })
+  }),
 )
 
 export const updatePageValidator = vine.compile(
@@ -36,5 +36,5 @@ export const updatePageValidator = vine.compile(
       })
       .optional(),
     visibility: vine.enum(['public', 'private']).optional(),
-  })
+  }),
 )

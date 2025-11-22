@@ -1,17 +1,24 @@
 import { Head, Link, useForm } from '@inertiajs/react'
-import AuthLayout from '../../layouts/auth_layout'
+import type { FormEventHandler } from 'react'
 import { Button } from '../../components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '../../components/ui/card'
 import { Input } from '../../components/ui/input'
 import { Label } from '../../components/ui/label'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../../components/ui/card'
-import { FormEventHandler } from 'react'
+import AuthLayout from '../../layouts/auth_layout'
 
 export default function Register() {
   const { data, setData, post, processing, errors } = useForm({
     email: '',
     username: '',
     password: '',
-    passwordConfirmation: '',
+    password_confirmation: '',
   })
 
   const submit: FormEventHandler = (e) => {
@@ -79,18 +86,20 @@ export default function Register() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="passwordConfirmation">Confirm Password</Label>
+              <Label htmlFor="password_confirmation">Confirm Password</Label>
               <Input
-                id="passwordConfirmation"
+                id="password_confirmation"
                 type="password"
-                value={data.passwordConfirmation}
-                onChange={(e) => setData('passwordConfirmation', e.target.value)}
+                value={data.password_confirmation}
+                onChange={(e) =>
+                  setData('password_confirmation', e.target.value)
+                }
                 placeholder="••••••••"
                 required
               />
-              {errors.passwordConfirmation && (
+              {errors.password_confirmation && (
                 <p className="text-sm text-destructive">
-                  {errors.passwordConfirmation}
+                  {errors.password_confirmation}
                 </p>
               )}
             </div>

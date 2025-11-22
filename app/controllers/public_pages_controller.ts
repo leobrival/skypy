@@ -3,6 +3,7 @@ import { DateTime } from 'luxon'
 import LandingPage from '#models/landing_page'
 import Link from '#models/link'
 import LinkClick from '#models/link_click'
+import GeolocationService from '#services/geolocation_service'
 
 export default class PublicPagesController {
   /**
@@ -60,7 +61,11 @@ export default class PublicPagesController {
       const browser = this.detectBrowser(userAgent)
       const os = this.detectOS(userAgent)
 
-      // Record detailed click analytics
+      // Get geolocation data from IP
+      const geolocationService = new GeolocationService()
+      const geoData = await geolocationService.getLocationFromIP(request.ip())
+
+      // Record detailed click analytics with geolocation
       LinkClick.create({
         linkId: shortLink.id,
         userId: auth.user?.id || null,
@@ -70,6 +75,13 @@ export default class PublicPagesController {
         deviceType,
         browser,
         os,
+        country: geoData.country,
+        countryCode: geoData.countryCode,
+        city: geoData.city,
+        region: geoData.region,
+        timezone: geoData.timezone,
+        latitude: geoData.lat,
+        longitude: geoData.lon,
         clickedAt: DateTime.now(),
       }).catch(() => {})
 

@@ -1,12 +1,13 @@
-import { DateTime } from 'luxon'
-import hash from '@adonisjs/core/services/hash'
-import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
+import { compose } from '@adonisjs/core/helpers'
+import hash from '@adonisjs/core/services/hash'
+import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
+import type { DateTime } from 'luxon'
 import LandingPage from '#models/landing_page'
 import Link from '#models/link'
-import Product from '#models/product'
+
+// import Product from '#models/product' // TODO: Uncomment when implementing Phase 6 (E-commerce)
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -38,7 +39,11 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column.dateTime({ autoCreate: true, columnName: 'created_at' })
   declare createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'updated_at' })
+  @column.dateTime({
+    autoCreate: true,
+    autoUpdate: true,
+    columnName: 'updated_at',
+  })
   declare updatedAt: DateTime
 
   // Relationships
@@ -48,6 +53,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @hasMany(() => Link)
   declare links: HasMany<typeof Link>
 
-  @hasMany(() => Product, { foreignKey: 'sellerId' })
-  declare products: HasMany<typeof Product>
+  // TODO: Uncomment when implementing Phase 6 (E-commerce)
+  // @hasMany(() => Product, { foreignKey: 'sellerId' })
+  // declare products: HasMany<typeof Product>
 }

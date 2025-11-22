@@ -1,10 +1,10 @@
 /// <reference path="../../adonisrc.ts" />
 /// <reference path="../../config/inertia.ts" />
 
-import '../css/app.css';
-import { createRoot } from 'react-dom/client';
-import { createInertiaApp } from '@inertiajs/react';
+import '../css/app.css'
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
+import { createInertiaApp } from '@inertiajs/react'
+import { createRoot } from 'react-dom/client'
 
 const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
 
@@ -21,8 +21,6 @@ createInertiaApp({
   },
 
   setup({ el, App, props }) {
-    
-    createRoot(el).render(<App {...props} />);
-    
+    createRoot(el).render(<App {...props} />)
   },
-});
+})

@@ -3,14 +3,14 @@ import LandingPage from '#models/landing_page'
 import Link from '#models/link'
 import LinkShortenerService from '#services/link_shortener_service'
 import {
+  createLinkValidator,
+  reorderLinksValidator,
+  updateLinkValidator,
+} from '#validators/link_validator'
+import {
   createPageValidator,
   updatePageValidator,
 } from '#validators/page_validator'
-import {
-  createLinkValidator,
-  updateLinkValidator,
-  reorderLinksValidator,
-} from '#validators/link_validator'
 
 export default class PagesController {
   private linkShortenerService = new LinkShortenerService()
@@ -59,7 +59,7 @@ export default class PagesController {
   /**
    * Show a single landing page (for editing)
    */
-  async show({ auth, params, inertia, response }: HttpContext) {
+  async show({ auth, params, inertia }: HttpContext) {
     const user = auth.getUserOrFail()
     const page = await LandingPage.query()
       .where('id', params.id)

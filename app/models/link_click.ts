@@ -27,8 +27,23 @@ export default class LinkClick extends BaseModel {
   @column()
   declare country: string | null
 
+  @column({ columnName: 'country_code' })
+  declare countryCode: string | null
+
   @column()
   declare city: string | null
+
+  @column()
+  declare region: string | null
+
+  @column()
+  declare timezone: string | null
+
+  @column()
+  declare latitude: number | null
+
+  @column()
+  declare longitude: number | null
 
   @column({ columnName: 'device_type' })
   declare deviceType: string | null

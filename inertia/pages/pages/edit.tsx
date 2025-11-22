@@ -1,10 +1,16 @@
-import { Head, useForm, router } from '@inertiajs/react'
-import AppLayout from '../../layouts/app_layout'
+import { Head, router, useForm } from '@inertiajs/react'
+import { type FormEventHandler, useState } from 'react'
 import { Button } from '../../components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../../components/ui/card'
 import { Input } from '../../components/ui/input'
 import { Label } from '../../components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
-import { FormEventHandler, useState } from 'react'
+import AppLayout from '../../layouts/app_layout'
 
 interface Link {
   id: string
@@ -38,14 +44,25 @@ interface Page {
 export default function EditPage({ page }: { page: Page }) {
   const [showAddLink, setShowAddLink] = useState(false)
 
-  const { data: pageData, setData: setPageData, put, processing, errors } = useForm({
+  const {
+    data: pageData,
+    setData: setPageData,
+    put,
+    processing,
+    errors,
+  } = useForm({
     profileName: page.profileName,
     bio: page.bio || '',
     themeConfig: page.themeConfig || {},
     visibility: page.visibility,
   })
 
-  const { data: linkData, setData: setLinkData, post, reset } = useForm({
+  const {
+    data: linkData,
+    setData: setLinkData,
+    post,
+    reset,
+  } = useForm({
     title: '',
     description: '',
     destinationUrl: '',
@@ -105,10 +122,14 @@ export default function EditPage({ page }: { page: Page }) {
                     <Input
                       id="profileName"
                       value={pageData.profileName}
-                      onChange={(e) => setPageData('profileName', e.target.value)}
+                      onChange={(e) =>
+                        setPageData('profileName', e.target.value)
+                      }
                     />
                     {errors.profileName && (
-                      <p className="text-sm text-destructive">{errors.profileName}</p>
+                      <p className="text-sm text-destructive">
+                        {errors.profileName}
+                      </p>
                     )}
                   </div>
 
@@ -138,14 +159,20 @@ export default function EditPage({ page }: { page: Page }) {
                     <CardTitle>Links</CardTitle>
                     <CardDescription>Manage your page links</CardDescription>
                   </div>
-                  <Button size="sm" onClick={() => setShowAddLink(!showAddLink)}>
+                  <Button
+                    size="sm"
+                    onClick={() => setShowAddLink(!showAddLink)}
+                  >
                     {showAddLink ? 'Cancel' : 'Add Link'}
                   </Button>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 {showAddLink && (
-                  <form onSubmit={addLink} className="space-y-4 p-4 border rounded-lg">
+                  <form
+                    onSubmit={addLink}
+                    className="space-y-4 p-4 border rounded-lg"
+                  >
                     <div className="space-y-2">
                       <Label>Title</Label>
                       <Input
@@ -160,7 +187,9 @@ export default function EditPage({ page }: { page: Page }) {
                       <Input
                         type="url"
                         value={linkData.destinationUrl}
-                        onChange={(e) => setLinkData('destinationUrl', e.target.value)}
+                        onChange={(e) =>
+                          setLinkData('destinationUrl', e.target.value)
+                        }
                         placeholder="https://example.com"
                         required
                       />
@@ -169,7 +198,9 @@ export default function EditPage({ page }: { page: Page }) {
                       <Label>Description (optional)</Label>
                       <Input
                         value={linkData.description}
-                        onChange={(e) => setLinkData('description', e.target.value)}
+                        onChange={(e) =>
+                          setLinkData('description', e.target.value)
+                        }
                         placeholder="Short description"
                       />
                     </div>
@@ -222,9 +253,13 @@ export default function EditPage({ page }: { page: Page }) {
               <CardContent>
                 <div className="border rounded-lg p-6 bg-muted/20">
                   <div className="text-center mb-6">
-                    <h2 className="text-2xl font-bold">{pageData.profileName}</h2>
+                    <h2 className="text-2xl font-bold">
+                      {pageData.profileName}
+                    </h2>
                     {pageData.bio && (
-                      <p className="text-muted-foreground mt-2">{pageData.bio}</p>
+                      <p className="text-muted-foreground mt-2">
+                        {pageData.bio}
+                      </p>
                     )}
                   </div>
                   <div className="space-y-3">

@@ -43,6 +43,7 @@
     "@japa/runner": "^4.2.0",
     "@playwright/test": "^1.56.1",
     "@swc/core": "1.11.24",
+    "@tailwindcss/postcss": "^4.1.17",
     "@types/luxon": "^3.7.1",
     "@types/node": "^22.15.18",
     "@types/react": "^19.2.6",

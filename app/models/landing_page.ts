@@ -1,8 +1,8 @@
-import { DateTime } from 'luxon'
-import { BaseModel, column, belongsTo, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
-import User from '#models/user'
+import type { DateTime } from 'luxon'
 import Link from '#models/link'
+import User from '#models/user'
 
 interface ThemeConfig {
   backgroundColor?: string
@@ -30,7 +30,8 @@ export default class LandingPage extends BaseModel {
 
   @column({
     columnName: 'theme_config',
-    prepare: (value: ThemeConfig | null) => (value ? JSON.stringify(value) : null),
+    prepare: (value: ThemeConfig | null) =>
+      value ? JSON.stringify(value) : null,
     consume: (value: string | null) => (value ? JSON.parse(value) : null),
   })
   declare themeConfig: ThemeConfig | null
@@ -44,7 +45,11 @@ export default class LandingPage extends BaseModel {
   @column.dateTime({ autoCreate: true, columnName: 'created_at' })
   declare createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'updated_at' })
+  @column.dateTime({
+    autoCreate: true,
+    autoUpdate: true,
+    columnName: 'updated_at',
+  })
   declare updatedAt: DateTime
 
   // Relationships

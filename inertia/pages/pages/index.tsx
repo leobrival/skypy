@@ -1,7 +1,13 @@
 import { Head, Link, router } from '@inertiajs/react'
-import AppLayout from '../../layouts/app_layout'
 import { Button } from '../../components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../../components/ui/card'
+import AppLayout from '../../layouts/app_layout'
 
 interface LandingPage {
   id: string
@@ -29,7 +35,9 @@ export default function PagesIndex({ pages }: { pages: LandingPage[] }) {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold mb-2">My Pages</h1>
-            <p className="text-muted-foreground">Manage your link-in-bio pages</p>
+            <p className="text-muted-foreground">
+              Manage your link-in-bio pages
+            </p>
           </div>
           <Link href="/pages/create">
             <Button>Create New Page</Button>
@@ -68,7 +76,13 @@ export default function PagesIndex({ pages }: { pages: LandingPage[] }) {
                     </div>
                     <div className="flex justify-between">
                       <span>Status:</span>
-                      <span className={page.visibility === 'public' ? 'text-green-600' : 'text-yellow-600'}>
+                      <span
+                        className={
+                          page.visibility === 'public'
+                            ? 'text-green-600'
+                            : 'text-yellow-600'
+                        }
+                      >
                         {page.visibility}
                       </span>
                     </div>
@@ -80,7 +94,11 @@ export default function PagesIndex({ pages }: { pages: LandingPage[] }) {
                         Edit
                       </Button>
                     </Link>
-                    <Link href={`/${page.slug}`} target="_blank" className="flex-1">
+                    <Link
+                      href={`/${page.slug}`}
+                      target="_blank"
+                      className="flex-1"
+                    >
                       <Button variant="outline" className="w-full">
                         View
                       </Button>

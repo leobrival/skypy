@@ -8,12 +8,13 @@ import type { NextFn } from '@adonisjs/core/types/http'
  * For production, consider using Redis or a dedicated rate limiting service
  */
 export default class RateLimiterMiddleware {
-  private static requests: Map<string, { count: number; resetAt: number }> = new Map()
+  private static requests: Map<string, { count: number; resetAt: number }> =
+    new Map()
 
   async handle(
     { request, response }: HttpContext,
     next: NextFn,
-    options: { max?: number; windowMs?: number } = {}
+    options: { max?: number; windowMs?: number } = {},
   ) {
     const { max = 100, windowMs = 60000 } = options // Default: 100 requests per minute
     const ip = request.ip()

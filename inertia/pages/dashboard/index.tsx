@@ -1,7 +1,13 @@
 import { Head, Link } from '@inertiajs/react'
-import AppLayout from '../../layouts/app_layout'
 import { Button } from '../../components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../../components/ui/card'
+import AppLayout from '../../layouts/app_layout'
 
 interface User {
   id: string
@@ -17,7 +23,9 @@ export default function Dashboard({ user }: { user: User }) {
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Welcome back, {user.username}!</h1>
+          <h1 className="text-3xl font-bold mb-2">
+            Welcome back, {user.username}!
+          </h1>
           <p className="text-muted-foreground">
             Manage your links, pages, and analytics from here
           </p>
@@ -41,9 +49,7 @@ export default function Dashboard({ user }: { user: User }) {
           <Card>
             <CardHeader>
               <CardTitle>Shortened Links</CardTitle>
-              <CardDescription>
-                Create and track shortened URLs
-              </CardDescription>
+              <CardDescription>Create and track shortened URLs</CardDescription>
             </CardHeader>
             <CardContent>
               <Link href="/links">

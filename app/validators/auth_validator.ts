@@ -20,7 +20,7 @@ export const registerValidator = vine.compile(
         return !user
       }),
     password: vine.string().minLength(8).maxLength(255).confirmed(),
-  })
+  }),
 )
 
 export const loginValidator = vine.compile(
@@ -28,5 +28,5 @@ export const loginValidator = vine.compile(
     email: vine.string().email().normalizeEmail(),
     password: vine.string(),
     remember: vine.boolean().optional(),
-  })
+  }),
 )
