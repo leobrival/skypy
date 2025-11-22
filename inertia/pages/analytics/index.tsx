@@ -1,15 +1,13 @@
 import { Head, Link } from '@inertiajs/react'
+import { useState } from 'react'
 import {
   Area,
   AreaChart,
   Bar,
   BarChart,
-  CartesianGrid,
   Cell,
   Pie,
   PieChart,
-  ResponsiveContainer,
-  Tooltip,
   XAxis,
   YAxis,
 } from 'recharts'
@@ -20,6 +18,20 @@ import {
   CardHeader,
   CardTitle,
 } from '../../components/ui/card'
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '../../components/ui/chart'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '../../components/ui/tabs'
 import AppLayout from '../../layouts/app_layout'
 
 interface User {
@@ -87,11 +99,28 @@ interface Analytics {
   cityStats: CityStat[]
 }
 
-const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981']
+// Chart configurations
+const clicksChartConfig = {
+  clicks: {
+    label: 'Clicks',
+    color: 'hsl(var(--chart-1))',
+  },
+} satisfies ChartConfig
 
-/**
- * Convert ISO 3166-1 alpha-2 country code to flag emoji
- */
+const deviceChartConfig = {
+  mobile: { label: 'Mobile', color: 'hsl(var(--chart-1))' },
+  desktop: { label: 'Desktop', color: 'hsl(var(--chart-2))' },
+  tablet: { label: 'Tablet', color: 'hsl(var(--chart-3))' },
+} satisfies ChartConfig
+
+const browserChartConfig = {
+  Chrome: { label: 'Chrome', color: 'hsl(var(--chart-1))' },
+  Firefox: { label: 'Firefox', color: 'hsl(var(--chart-2))' },
+  Safari: { label: 'Safari', color: 'hsl(var(--chart-3))' },
+  Edge: { label: 'Edge', color: 'hsl(var(--chart-4))' },
+  Opera: { label: 'Opera', color: 'hsl(var(--chart-5))' },
+} satisfies ChartConfig
+
 function getFlagEmoji(countryCode: string): string {
   if (!countryCode || countryCode.length !== 2) return '🌍'
   const codePoints = countryCode
@@ -107,390 +136,414 @@ export default function AnalyticsIndex({
   analytics: Analytics
   user: User
 }) {
+  const [period] = useState('30d')
+
   return (
     <AppLayout>
       <Head title="Analytics" />
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Analytics</h1>
-          <p className="text-muted-foreground">
-            View your click analytics and insights
+          <h1 className="text-4xl font-bold tracking-tight">Analytics</h1>
+          <p className="text-muted-foreground mt-2">
+            Track your link performance and visitor insights
           </p>
         </div>
 
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <Card>
-            <CardHeader>
-              <CardTitle>Total Clicks</CardTitle>
-              <CardDescription>All-time click count</CardDescription>
+            <CardHeader className="pb-2">
+              <CardDescription>Total Clicks</CardDescription>
+              <CardTitle className="text-4xl">
+                {analytics.totalClicks}
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-4xl font-bold">{analytics.totalClicks}</div>
-            </CardContent>
           </Card>
 
           <Card>
-            <CardHeader>
-              <CardTitle>Total Views</CardTitle>
-              <CardDescription>Page view count</CardDescription>
+            <CardHeader className="pb-2">
+              <CardDescription>Total Views</CardDescription>
+              <CardTitle className="text-4xl">{analytics.totalViews}</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-4xl font-bold">{analytics.totalViews}</div>
-            </CardContent>
           </Card>
 
           <Card>
-            <CardHeader>
-              <CardTitle>Total Links</CardTitle>
-              <CardDescription>Number of active links</CardDescription>
+            <CardHeader className="pb-2">
+              <CardDescription>Active Links</CardDescription>
+              <CardTitle className="text-4xl">{analytics.totalLinks}</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-4xl font-bold">{analytics.totalLinks}</div>
-            </CardContent>
           </Card>
         </div>
 
-        {/* Clicks Over Time Chart */}
-        {analytics.clicksPerDay.length > 0 && (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>Clicks Over Time</CardTitle>
-              <CardDescription>
-                Click activity for the last 30 days
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <AreaChart data={analytics.clicksPerDay}>
-                  <defs>
-                    <linearGradient
-                      id="colorClicks"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    className="stroke-muted"
-                  />
-                  <XAxis
-                    dataKey="date"
-                    className="text-xs"
-                    tickFormatter={(value) => {
-                      const date = new Date(value)
-                      return `${date.getMonth() + 1}/${date.getDate()}`
-                    }}
-                  />
-                  <YAxis className="text-xs" />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: 'hsl(var(--background))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '6px',
-                    }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="clicks"
-                    stroke="#3b82f6"
-                    fillOpacity={1}
-                    fill="url(#colorClicks)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        )}
+        {/* Tabs Navigation */}
+        <Tabs defaultValue="overview" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="geographic">Geographic</TabsTrigger>
+            <TabsTrigger value="devices">Devices & Browsers</TabsTrigger>
+          </TabsList>
 
-        {/* Top Links and Device/Browser Stats */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Top Links */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Top Performing Links</CardTitle>
-              <CardDescription>Your most clicked links</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {analytics.topLinks.length === 0 ? (
-                <p className="text-center text-muted-foreground py-8">
-                  No links yet. Create your first link to get started!
-                </p>
-              ) : (
-                <div className="space-y-4">
-                  {analytics.topLinks.map((link) => (
-                    <div
-                      key={link.id}
-                      className="flex justify-between items-center border-b pb-3 last:border-0"
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="space-y-6">
+            {/* Clicks Over Time */}
+            {analytics.clicksPerDay.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Clicks Over Time</CardTitle>
+                  <CardDescription>
+                    Daily click activity for the last {period}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ChartContainer
+                    config={clicksChartConfig}
+                    className="h-[300px]"
+                  >
+                    <AreaChart
+                      data={analytics.clicksPerDay}
+                      margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                     >
-                      <div className="flex-1 min-w-0">
-                        <Link
-                          href={`/links/${link.id}/edit`}
-                          className="font-medium hover:text-primary truncate block"
+                      <defs>
+                        <linearGradient
+                          id="fillClicks"
+                          x1="0"
+                          y1="0"
+                          x2="0"
+                          y2="1"
                         >
-                          {link.title}
-                        </Link>
-                        <p className="text-sm text-muted-foreground truncate">
-                          /{link.shortCode}
-                        </p>
-                      </div>
-                      <div className="text-right ml-4">
-                        <div className="text-2xl font-bold">
-                          {link.clickCount}
-                        </div>
-                        <p className="text-xs text-muted-foreground">clicks</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Device Stats */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Device Breakdown</CardTitle>
-              <CardDescription>Clicks by device type</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {analytics.deviceStats.length === 0 ? (
-                <p className="text-center text-muted-foreground py-8">
-                  No device data yet
-                </p>
-              ) : (
-                <div className="h-[300px] flex items-center justify-center">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={analytics.deviceStats}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        label={(entry) => `${entry.type}: ${entry.count}`}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="count"
-                      >
-                        {analytics.deviceStats.map((entry, index) => (
-                          <Cell
-                            key={entry.type}
-                            fill={COLORS[index % COLORS.length]}
+                          <stop
+                            offset="5%"
+                            stopColor="hsl(var(--chart-1))"
+                            stopOpacity={0.8}
                           />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: 'hsl(var(--background))',
-                          border: '1px solid hsl(var(--border))',
-                          borderRadius: '6px',
+                          <stop
+                            offset="95%"
+                            stopColor="hsl(var(--chart-1))"
+                            stopOpacity={0.1}
+                          />
+                        </linearGradient>
+                      </defs>
+                      <XAxis
+                        dataKey="date"
+                        tickLine={false}
+                        axisLine={false}
+                        tickMargin={8}
+                        tickFormatter={(value) => {
+                          const date = new Date(value)
+                          return `${date.getMonth() + 1}/${date.getDate()}`
                         }}
                       />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+                      <YAxis tickLine={false} axisLine={false} tickMargin={8} />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Area
+                        dataKey="clicks"
+                        type="monotone"
+                        fill="url(#fillClicks)"
+                        fillOpacity={1}
+                        stroke="hsl(var(--chart-1))"
+                        strokeWidth={2}
+                      />
+                    </AreaChart>
+                  </ChartContainer>
+                </CardContent>
+              </Card>
+            )}
 
-        {/* Browser Stats */}
-        {analytics.browserStats.length > 0 && (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>Browser Usage</CardTitle>
-              <CardDescription>
-                Top 5 browsers used by your visitors
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={analytics.browserStats}>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    className="stroke-muted"
-                  />
-                  <XAxis dataKey="name" className="text-xs" />
-                  <YAxis className="text-xs" />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: 'hsl(var(--background))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '6px',
-                    }}
-                  />
-                  <Bar dataKey="count" fill="#3b82f6" radius={[8, 8, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Geographic Stats */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Country Stats */}
-          {analytics.countryStats && analytics.countryStats.length > 0 && (
+            {/* Top Links */}
             <Card>
               <CardHeader>
-                <CardTitle>Top Countries</CardTitle>
+                <CardTitle>Top Performing Links</CardTitle>
+                <CardDescription>Your most clicked links</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {analytics.topLinks.length === 0 ? (
+                  <p className="text-center text-muted-foreground py-8">
+                    No links yet. Create your first link to get started!
+                  </p>
+                ) : (
+                  <div className="space-y-4">
+                    {analytics.topLinks.map((link) => (
+                      <div
+                        key={link.id}
+                        className="flex justify-between items-center border-b pb-3 last:border-0"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <Link
+                            href={`/links/${link.id}/edit`}
+                            className="font-medium hover:text-primary truncate block"
+                          >
+                            {link.title}
+                          </Link>
+                          <p className="text-sm text-muted-foreground truncate">
+                            /{link.shortCode}
+                          </p>
+                        </div>
+                        <div className="text-right ml-4">
+                          <div className="text-2xl font-bold">
+                            {link.clickCount}
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            clicks
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Recent Activity */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Clicks</CardTitle>
                 <CardDescription>
-                  Geographic distribution of your visitors
+                  Latest link clicks with detailed information
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  {analytics.countryStats.slice(0, 5).map((stat) => (
-                    <div
-                      key={stat.countryCode}
-                      className="flex justify-between items-center border-b pb-2 last:border-0"
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl">
-                          {getFlagEmoji(stat.countryCode)}
-                        </span>
-                        <span className="font-medium">{stat.country}</span>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-lg font-bold">{stat.count}</div>
-                        <p className="text-xs text-muted-foreground">clicks</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                {analytics.recentClicks.length === 0 ? (
+                  <p className="text-center text-muted-foreground py-8">
+                    No activity yet. Start sharing your links to see analytics!
+                  </p>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left py-3 px-2 font-medium text-sm">
+                            Link
+                          </th>
+                          <th className="text-left py-3 px-2 font-medium text-sm">
+                            Device
+                          </th>
+                          <th className="text-left py-3 px-2 font-medium text-sm">
+                            Browser
+                          </th>
+                          <th className="text-left py-3 px-2 font-medium text-sm">
+                            OS
+                          </th>
+                          <th className="text-left py-3 px-2 font-medium text-sm">
+                            Country
+                          </th>
+                          <th className="text-left py-3 px-2 font-medium text-sm">
+                            Time
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {analytics.recentClicks.map((click) => (
+                          <tr
+                            key={click.id}
+                            className="border-b last:border-0 hover:bg-muted/50"
+                          >
+                            <td className="py-3 px-2">
+                              <div className="font-medium">
+                                {click.linkTitle}
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                /{click.linkShortCode}
+                              </div>
+                            </td>
+                            <td className="py-3 px-2 text-sm">
+                              <span className="inline-flex items-center px-2 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
+                                {click.deviceType || 'Unknown'}
+                              </span>
+                            </td>
+                            <td className="py-3 px-2 text-sm">
+                              {click.browser || '-'}
+                            </td>
+                            <td className="py-3 px-2 text-sm">
+                              {click.os || '-'}
+                            </td>
+                            <td className="py-3 px-2 text-sm">
+                              {click.country || '-'}
+                            </td>
+                            <td className="py-3 px-2 text-sm text-muted-foreground">
+                              {new Date(click.clickedAt).toLocaleString(
+                                'fr-FR',
+                                {
+                                  day: '2-digit',
+                                  month: '2-digit',
+                                  year: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                },
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </CardContent>
             </Card>
-          )}
+          </TabsContent>
 
-          {/* City Stats */}
-          {analytics.cityStats && analytics.cityStats.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Top Cities</CardTitle>
-                <CardDescription>City-level visitor breakdown</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {analytics.cityStats.slice(0, 5).map((stat, index) => (
-                    <div
-                      key={`${stat.city}-${stat.country}-${index}`}
-                      className="flex justify-between items-center border-b pb-2 last:border-0"
-                    >
-                      <div>
-                        <div className="font-medium">{stat.city}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {stat.country}
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-lg font-bold">{stat.count}</div>
-                        <p className="text-xs text-muted-foreground">clicks</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </div>
-
-        {/* Recent Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Clicks</CardTitle>
-            <CardDescription>
-              Your latest link clicks with detailed information
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {analytics.recentClicks.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">
-                No activity yet. Start sharing your links to see analytics!
-              </p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-3 px-2 font-medium text-sm">
-                        Link
-                      </th>
-                      <th className="text-left py-3 px-2 font-medium text-sm">
-                        Device
-                      </th>
-                      <th className="text-left py-3 px-2 font-medium text-sm">
-                        Browser
-                      </th>
-                      <th className="text-left py-3 px-2 font-medium text-sm">
-                        OS
-                      </th>
-                      <th className="text-left py-3 px-2 font-medium text-sm">
-                        Referrer
-                      </th>
-                      <th className="text-left py-3 px-2 font-medium text-sm">
-                        Time
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {analytics.recentClicks.map((click) => (
-                      <tr
-                        key={click.id}
-                        className="border-b last:border-0 hover:bg-muted/50"
-                      >
-                        <td className="py-3 px-2">
-                          <div className="font-medium">{click.linkTitle}</div>
-                          <div className="text-xs text-muted-foreground">
-                            /{click.linkShortCode}
-                          </div>
-                        </td>
-                        <td className="py-3 px-2 text-sm">
-                          <span className="inline-flex items-center px-2 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
-                            {click.deviceType || 'Unknown'}
-                          </span>
-                        </td>
-                        <td className="py-3 px-2 text-sm">
-                          {click.browser || '-'}
-                        </td>
-                        <td className="py-3 px-2 text-sm">{click.os || '-'}</td>
-                        <td className="py-3 px-2 text-sm max-w-[200px] truncate">
-                          {click.referrer ? (
-                            <a
-                              href={click.referrer}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-primary hover:underline"
-                            >
-                              {new URL(click.referrer).hostname}
-                            </a>
-                          ) : (
-                            <span className="text-muted-foreground">
-                              Direct
+          {/* Geographic Tab */}
+          <TabsContent value="geographic" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Country Stats */}
+              {analytics.countryStats && analytics.countryStats.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Top Countries</CardTitle>
+                    <CardDescription>
+                      Geographic distribution of your visitors
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {analytics.countryStats.slice(0, 10).map((stat) => (
+                        <div
+                          key={stat.countryCode}
+                          className="flex justify-between items-center border-b pb-2 last:border-0"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="text-2xl">
+                              {getFlagEmoji(stat.countryCode)}
                             </span>
-                          )}
-                        </td>
-                        <td className="py-3 px-2 text-sm text-muted-foreground">
-                          {new Date(click.clickedAt).toLocaleString('fr-FR', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                            <span className="font-medium">{stat.country}</span>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-lg font-bold">
+                              {stat.count}
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                              clicks
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* City Stats */}
+              {analytics.cityStats && analytics.cityStats.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Top Cities</CardTitle>
+                    <CardDescription>
+                      City-level visitor breakdown
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {analytics.cityStats.slice(0, 10).map((stat, index) => (
+                        <div
+                          key={`${stat.city}-${stat.country}-${index}`}
+                          className="flex justify-between items-center border-b pb-2 last:border-0"
+                        >
+                          <div>
+                            <div className="font-medium">{stat.city}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {stat.country}
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-lg font-bold">
+                              {stat.count}
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                              clicks
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </TabsContent>
+
+          {/* Devices & Browsers Tab */}
+          <TabsContent value="devices" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Device Breakdown */}
+              {analytics.deviceStats.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Device Breakdown</CardTitle>
+                    <CardDescription>Clicks by device type</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ChartContainer
+                      config={deviceChartConfig}
+                      className="h-[300px]"
+                    >
+                      <PieChart>
+                        <ChartTooltip
+                          content={<ChartTooltipContent hideLabel />}
+                        />
+                        <Pie
+                          data={analytics.deviceStats}
+                          dataKey="count"
+                          nameKey="type"
+                          cx="50%"
+                          cy="50%"
+                          outerRadius={80}
+                          label={({ type, count }) => `${type}: ${count}`}
+                        >
+                          {analytics.deviceStats.map((entry, index) => (
+                            <Cell
+                              key={entry.type}
+                              fill={`hsl(var(--chart-${(index % 5) + 1}))`}
+                            />
+                          ))}
+                        </Pie>
+                        <ChartLegend content={<ChartLegendContent />} />
+                      </PieChart>
+                    </ChartContainer>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Browser Usage */}
+              {analytics.browserStats.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Browser Usage</CardTitle>
+                    <CardDescription>
+                      Top 5 browsers used by your visitors
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ChartContainer
+                      config={browserChartConfig}
+                      className="h-[300px]"
+                    >
+                      <BarChart data={analytics.browserStats}>
+                        <XAxis
+                          dataKey="name"
+                          tickLine={false}
+                          tickMargin={10}
+                          axisLine={false}
+                        />
+                        <YAxis
+                          tickLine={false}
+                          axisLine={false}
+                          tickMargin={8}
+                        />
+                        <ChartTooltip content={<ChartTooltipContent />} />
+                        <Bar
+                          dataKey="count"
+                          fill="hsl(var(--chart-1))"
+                          radius={[8, 8, 0, 0]}
+                        />
+                      </BarChart>
+                    </ChartContainer>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </AppLayout>
   )
