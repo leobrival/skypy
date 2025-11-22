@@ -1,8 +1,9 @@
-import { DateTime } from 'luxon'
-import { BaseModel, column, belongsTo } from '@adonisjs/lucid/orm'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
-import User from '#models/user'
+import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import type { DateTime } from 'luxon'
 import LandingPage from '#models/landing_page'
+import LinkClick from '#models/link_click'
+import User from '#models/user'
 
 export default class Link extends BaseModel {
   @column({ isPrimary: true })
@@ -38,10 +39,32 @@ export default class Link extends BaseModel {
   @column({ columnName: 'is_active' })
   declare isActive: boolean
 
+  @column({ columnName: 'utm_source' })
+  declare utmSource: string | null
+
+  @column({ columnName: 'utm_medium' })
+  declare utmMedium: string | null
+
+  @column({ columnName: 'utm_campaign' })
+  declare utmCampaign: string | null
+
+  @column({ columnName: 'utm_term' })
+  declare utmTerm: string | null
+
+  @column({ columnName: 'utm_content' })
+  declare utmContent: string | null
+
+  @column({ columnName: 'custom_params' })
+  declare customParams: { key: string; value: string }[] | null
+
   @column.dateTime({ autoCreate: true, columnName: 'created_at' })
   declare createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'updated_at' })
+  @column.dateTime({
+    autoCreate: true,
+    autoUpdate: true,
+    columnName: 'updated_at',
+  })
   declare updatedAt: DateTime
 
   // Relationships
@@ -50,4 +73,7 @@ export default class Link extends BaseModel {
 
   @belongsTo(() => LandingPage, { foreignKey: 'landingPageId' })
   declare landingPage: BelongsTo<typeof LandingPage>
+
+  @hasMany(() => LinkClick)
+  declare clicks: HasMany<typeof LinkClick>
 }
