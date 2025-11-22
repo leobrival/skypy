@@ -62,6 +62,18 @@ interface BrowserStat {
   count: number
 }
 
+interface CountryStat {
+  country: string
+  countryCode: string
+  count: number
+}
+
+interface CityStat {
+  city: string
+  country: string
+  count: number
+}
+
 interface Analytics {
   totalClicks: number
   totalViews: number
@@ -71,9 +83,23 @@ interface Analytics {
   topLinks: TopLink[]
   deviceStats: DeviceStat[]
   browserStats: BrowserStat[]
+  countryStats: CountryStat[]
+  cityStats: CityStat[]
 }
 
 const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981']
+
+/**
+ * Convert ISO 3166-1 alpha-2 country code to flag emoji
+ */
+function getFlagEmoji(countryCode: string): string {
+  if (!countryCode || countryCode.length !== 2) return '🌍'
+  const codePoints = countryCode
+    .toUpperCase()
+    .split('')
+    .map((char) => 127397 + char.charCodeAt(0))
+  return String.fromCodePoint(...codePoints)
+}
 
 export default function AnalyticsIndex({
   analytics,
@@ -305,6 +331,73 @@ export default function AnalyticsIndex({
             </CardContent>
           </Card>
         )}
+
+        {/* Geographic Stats */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Country Stats */}
+          {analytics.countryStats && analytics.countryStats.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Top Countries</CardTitle>
+                <CardDescription>
+                  Geographic distribution of your visitors
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {analytics.countryStats.slice(0, 5).map((stat) => (
+                    <div
+                      key={stat.countryCode}
+                      className="flex justify-between items-center border-b pb-2 last:border-0"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">
+                          {getFlagEmoji(stat.countryCode)}
+                        </span>
+                        <span className="font-medium">{stat.country}</span>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-lg font-bold">{stat.count}</div>
+                        <p className="text-xs text-muted-foreground">clicks</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* City Stats */}
+          {analytics.cityStats && analytics.cityStats.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Top Cities</CardTitle>
+                <CardDescription>City-level visitor breakdown</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {analytics.cityStats.slice(0, 5).map((stat, index) => (
+                    <div
+                      key={`${stat.city}-${stat.country}-${index}`}
+                      className="flex justify-between items-center border-b pb-2 last:border-0"
+                    >
+                      <div>
+                        <div className="font-medium">{stat.city}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {stat.country}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-lg font-bold">{stat.count}</div>
+                        <p className="text-xs text-muted-foreground">clicks</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
 
         {/* Recent Activity */}
         <Card>

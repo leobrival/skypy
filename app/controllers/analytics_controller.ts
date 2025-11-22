@@ -62,6 +62,26 @@ export default class AnalyticsController {
       .orderBy('count', 'desc')
       .limit(5)
 
+    // Get geographic breakdown by country
+    const countryStats = await db
+      .from('link_clicks')
+      .select('country', 'country_code', db.raw('COUNT(*) as count'))
+      .whereIn('link_id', Link.query().where('user_id', user.id).select('id'))
+      .whereNotNull('country')
+      .groupBy('country', 'country_code')
+      .orderBy('count', 'desc')
+      .limit(10)
+
+    // Get city breakdown
+    const cityStats = await db
+      .from('link_clicks')
+      .select('city', 'country', db.raw('COUNT(*) as count'))
+      .whereIn('link_id', Link.query().where('user_id', user.id).select('id'))
+      .whereNotNull('city')
+      .groupBy('city', 'country')
+      .orderBy('count', 'desc')
+      .limit(10)
+
     const analytics = {
       totalClicks: Number(totalClicks[0].$extras.total) || 0,
       totalViews: Number(totalViews[0].$extras.total) || 0,
@@ -94,6 +114,16 @@ export default class AnalyticsController {
       })),
       browserStats: browserStats.map((row) => ({
         name: row.browser,
+        count: Number(row.count),
+      })),
+      countryStats: countryStats.map((row) => ({
+        country: row.country,
+        countryCode: row.country_code,
+        count: Number(row.count),
+      })),
+      cityStats: cityStats.map((row) => ({
+        city: row.city,
+        country: row.country,
         count: Number(row.count),
       })),
     }
