@@ -7,6 +7,37 @@ import GeolocationService from '#services/geolocation_service'
 
 export default class PublicPagesController {
   /**
+   * Get landing page data as JSON (for React Query / offline caching)
+   */
+  async getPageData({ params, response }: HttpContext) {
+    const page = await LandingPage.query()
+      .where('slug', params.slug)
+      .where('visibility', 'public')
+      .preload('links', (query) => {
+        query.where('isActive', true).orderBy('position', 'asc')
+      })
+      .first()
+
+    if (!page) {
+      return response.notFound({ error: 'Page not found' })
+    }
+
+    return response.json({
+      slug: page.slug,
+      profileName: page.profileName,
+      bio: page.bio,
+      themeConfig: page.themeConfig || {},
+      links: page.links.map((link) => ({
+        id: link.id,
+        title: link.title,
+        description: link.description,
+        destinationUrl: link.destinationUrl,
+        shortCode: link.shortCode,
+      })),
+    })
+  }
+
+  /**
    * Detect device type from user agent
    */
   private detectDeviceType(userAgent: string): string {

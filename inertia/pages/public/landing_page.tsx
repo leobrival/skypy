@@ -1,4 +1,7 @@
-import { Head } from '@inertiajs/react'
+import { Head, usePage } from '@inertiajs/react'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import { OfflineIndicator } from '../../components/offline_indicator'
 import PublicLayout from '../../layouts/public_layout'
 
 interface Link {
@@ -24,7 +27,26 @@ interface Page {
   links: Link[]
 }
 
-export default function LandingPage({ page }: { page: Page }) {
+export default function LandingPage({ page: initialPage }: { page: Page }) {
+  // Fetch page data with React Query for offline caching
+  const { data: page = initialPage, isLoading } = useQuery({
+    queryKey: ['landing-page', initialPage.slug],
+    queryFn: async () => {
+      const response = await fetch(`/api/page/${initialPage.slug}`)
+      if (!response.ok) throw new Error('Failed to fetch page data')
+      return response.json()
+    },
+    initialData: initialPage,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 60 * 24, // 24 hours
+  })
+
+  // Store page data in localStorage for offline access
+  useEffect(() => {
+    if (page) {
+      localStorage.setItem(`page-${page.slug}`, JSON.stringify(page))
+    }
+  }, [page])
   const theme = page.themeConfig || {}
   const bgColor = theme.backgroundColor || '#ffffff'
   const textColor = theme.textColor || '#000000'
@@ -36,6 +58,19 @@ export default function LandingPage({ page }: { page: Page }) {
     pill: 'rounded-full',
   }[buttonStyle]
 
+  if (isLoading && !page) {
+    return (
+      <PublicLayout>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto" />
+            <p className="mt-4 text-gray-600">Loading...</p>
+          </div>
+        </div>
+      </PublicLayout>
+    )
+  }
+
   return (
     <PublicLayout>
       <Head title={page.profileName}>
@@ -44,6 +79,8 @@ export default function LandingPage({ page }: { page: Page }) {
           content={page.bio || `Visit ${page.profileName}'s page`}
         />
       </Head>
+
+      <OfflineIndicator />
 
       <div
         className="min-h-screen flex items-center justify-center p-4"

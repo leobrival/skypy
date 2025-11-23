@@ -108,5 +108,10 @@ router
   })
   .use(middleware.auth())
 
+// Public API endpoints (before catch-all route)
+router
+  .get('/api/page/:slug', [PublicPagesController, 'getPageData'])
+  .as('api.page.data')
+
 // Public pages (must be last to avoid conflicts)
 router.get('/:slug', [PublicPagesController, 'show']).as('public.page')
