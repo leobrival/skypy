@@ -1,0 +1,49 @@
+# Dependencies
+node_modules
+
+# Build output (will be generated in container)
+build
+
+# Development files
+.git
+.gitignore
+.env*
+!.env.example
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Testing
+tests
+*.test.ts
+*.spec.ts
+coverage
+
+# Documentation
+*.md
+!README.md
+docs
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp
+temp
+.cache
+
+# Claude/IDE specific
+.claude
+.ideabrowser
+.specify
+.speckit
+specs
