@@ -49,7 +49,16 @@ export default class GeolocationService {
         return this.getEmptyLocation()
       }
 
-      const data = await response.json()
+      const data = (await response.json()) as {
+        status: string
+        country?: string
+        countryCode?: string
+        city?: string
+        regionName?: string
+        timezone?: string
+        lat?: number
+        lon?: number
+      }
 
       if (data.status !== 'success') {
         return this.getEmptyLocation()

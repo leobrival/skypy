@@ -5,7 +5,7 @@
 **Status**: Draft
 **Input**: User description: "je voudrais créer un clone de Linktree, avec des fonctionnalités de gestions de lien raccourcie, de génération de QR Code ou autre similaire à https://bitly.com/pages/fr, le dashboard doit être minimaliste comme l'interface de Glide https://www.glideapps.com/, ca permettrait de pouvoir créer un système de configuration et la vente de carte virtuelle qui renvoie vers le dashboard administrable"
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Create Personal Landing Page (Priority: P1)
 
@@ -102,7 +102,7 @@ A small business owner purchases a virtual card package and wants to customize t
 - How does the platform handle payment failures or chargebacks for virtual card purchases?
 - What happens if someone scans a QR code linking to a landing page that was deleted or suspended?
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -162,7 +162,7 @@ A small business owner purchases a virtual card package and wants to customize t
 - **FR-034**: Users MUST be able to configure webhook URLs to receive click notifications in real-time
 - **FR-035**: Webhook payloads MUST include: event type, timestamp, link ID, click metadata (country, device, referrer)
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **User**: Represents platform users; attributes include email, username, profile image, account tier (free/premium), created date, email verified status
 - **Landing Page**: User's public link-in-bio page; attributes include slug, profile name, bio, theme configuration, visibility status, associated user
@@ -172,7 +172,7 @@ A small business owner purchases a virtual card package and wants to customize t
 - **Product**: Virtual card offering for sale; attributes include name, description, price, card template, seller user ID, active status
 - **Order**: Purchase transaction record; attributes include product ID, customer email, purchase date, amount, payment status, fulfillment status, activation token
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 
