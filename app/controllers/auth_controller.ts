@@ -25,7 +25,8 @@ export default class AuthController {
 
     await auth.use('web').login(user)
 
-    return response.redirect('/dashboard')
+    // Redirect new users to onboarding
+    return response.redirect('/onboarding/step1')
   }
 
   /**
@@ -44,6 +45,10 @@ export default class AuthController {
     const user = await User.verifyCredentials(email, password)
     await auth.use('web').login(user)
 
+    // Redirect to onboarding if not completed, otherwise dashboard
+    if (!user.onboardingCompleted) {
+      return response.redirect('/onboarding/step1')
+    }
     return response.redirect('/dashboard')
   }
 

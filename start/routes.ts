@@ -20,6 +20,7 @@ const AnalyticsController = () => import('#controllers/analytics_controller')
 const QrController = () => import('#controllers/qr_controller')
 const ShopController = () => import('#controllers/shop_controller')
 const UtmPresetsController = () => import('#controllers/utm_presets_controller')
+const OnboardingController = () => import('#controllers/onboarding_controller')
 
 // Home
 router.on('/').renderInertia('home')
@@ -36,6 +37,27 @@ router
   })
   .prefix('/auth')
   .use(middleware.guest())
+
+// Onboarding routes (authenticated)
+router
+  .group(() => {
+    router
+      .get('/onboarding/step1', [OnboardingController, 'showStep1'])
+      .as('onboarding.step1')
+    router.post('/onboarding/step1', [OnboardingController, 'handleStep1'])
+    router
+      .get('/onboarding/step2', [OnboardingController, 'showStep2'])
+      .as('onboarding.step2')
+    router.post('/onboarding/step2', [OnboardingController, 'handleStep2'])
+    router
+      .get('/onboarding/step3', [OnboardingController, 'showStep3'])
+      .as('onboarding.step3')
+    router.post('/onboarding/step3', [OnboardingController, 'handleStep3'])
+    router
+      .post('/onboarding/skip', [OnboardingController, 'skip'])
+      .as('onboarding.skip')
+  })
+  .use(middleware.auth())
 
 // Authenticated routes
 router

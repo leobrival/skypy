@@ -46,6 +46,30 @@ export default class User extends compose(BaseModel, AuthFinder) {
   })
   declare updatedAt: DateTime
 
+  // Onboarding fields
+  @column({ columnName: 'display_name' })
+  declare displayName: string | null
+
+  @column({
+    columnName: 'use_cases',
+    prepare: (value: string[] | null) => (value ? JSON.stringify(value) : null),
+    consume: (value: string | null) =>
+      value ? (typeof value === 'string' ? JSON.parse(value) : value) : null,
+  })
+  declare useCases: string[] | null
+
+  @column()
+  declare industry: string | null
+
+  @column({ columnName: 'first_action' })
+  declare firstAction: string | null
+
+  @column({ columnName: 'onboarding_completed' })
+  declare onboardingCompleted: boolean
+
+  @column.dateTime({ columnName: 'onboarding_completed_at' })
+  declare onboardingCompletedAt: DateTime | null
+
   // Relationships
   @hasMany(() => LandingPage)
   declare landingPages: HasMany<typeof LandingPage>
